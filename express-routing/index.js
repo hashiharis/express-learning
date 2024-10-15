@@ -4,6 +4,8 @@ const app=express();
 const dotenv=require('dotenv');
 dotenv.config();
 const userRouter=require("./routes/user.routes")
+const blogRouter=require("./routes/blog.routes");
+const connectDb = require("./connectDB");
 
 // app.use() is a middleware
 
@@ -20,7 +22,9 @@ app.get('/',(req,res)=>{
 
 //middleware provided by express for setting the routing and other validation checks or logic
 app.use('/user',userRouter);
+app.use('/api',blogRouter);
 
+connectDb();
 app.listen(PORT,()=>{
     console.log(`Server running on http://localhost:${PORT}`)
 })
