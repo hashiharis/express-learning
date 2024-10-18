@@ -73,7 +73,6 @@ const usignin = async (req, res) => {
         .status(400)
         .json({ message: "Password must be atleast 8 characters long" });
     }
-
     const userFound = await UserModel.findOne({ email });
 
     if (!userFound) {
@@ -87,10 +86,12 @@ const usignin = async (req, res) => {
         .status(400)
         .json({ message: "Incorrect email id and password" });
     }
-
+    const userFoundCopy = userFound.toObject();
+    delete userFoundCopy.password;
+    console.log(userFound);
     return res
       .status(200)
-      .json({ message: "Login successful", user: userFound });
+      .json({ message: "Login successful", user: userFoundCopy });
   } catch (error) {
     console.log("Sign In error", error);
     return res.status(500).json({ message: "Server error" });
@@ -151,12 +152,10 @@ const updateProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res
-      .status(200)
-      .json({
-        message: "Profile details updated",
-        updatedProfileDetails: userWithNewEmail,
-      });
+    return res.status(200).json({
+      message: "Profile details updated",
+      updatedProfileDetails: userWithNewEmail,
+    });
   } catch (error) {
     console.log("Error on profile updation", error);
     return res.status(500).json({ message: "Server error" });
@@ -178,10 +177,30 @@ const deleteUser = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+const getUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userFound = await UserModel.findById(id);
+    if (!userFound) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const userDataCopy = userFound.toObject();
+
+    delete userDataCopy.password;
+    return res
+      .status(200)
+      .json({ message: "User details fetched", userData: userDataCopy });
+  } catch (error) {
+    console.log("Error on fetching user details", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
 module.exports = {
   usignup,
   usignin,
   updatePassword,
   updateProfile,
   deleteUser,
+  getUser,
 };
