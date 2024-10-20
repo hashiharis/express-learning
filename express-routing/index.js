@@ -7,6 +7,7 @@ dotenv.config();
 const userRouter = require("./routes/user.routes");
 const blogRouter = require("./routes/blog.routes");
 const connectDb = require("./connectDB");
+const { countAPI } = require("./middlewares/apiCallCount");
 
 // app.use() is a middleware
 
@@ -16,6 +17,8 @@ app.use(express.json());
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
+
+app.use(countAPI);
 
 app.get("/", (req, res) => {
   res.send("home route");

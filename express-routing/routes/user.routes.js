@@ -15,15 +15,33 @@ const {
   deleteUser,
   getUser,
 } = require("../controller/userdb.controller");
+const { validateEmail } = require("../middlewares/validateEmail");
+const validateRequiredFields = require("../middlewares/validateRequiredFields");
+const { validatePassword } = require("../middlewares/validatePassword");
+const {
+  validateEmailPasswordRequired,
+} = require("../middlewares/validateEmailPasswordRequired");
 const userRouter = express.Router();
 
 // userRouter.get('/new',(req,res)=>{
 //     res.send("New user router")
 // })
 
-userRouter.post("/signup", usignup);
+userRouter.post(
+  "/signup",
+  validateRequiredFields,
+  validateEmail,
+  validatePassword,
+  usignup
+);
 
-userRouter.post("/signin", usignin);
+userRouter.post(
+  "/signin",
+  validateEmailPasswordRequired,
+  validateEmail,
+  validatePassword,
+  usignin
+);
 
 userRouter.get("/:id", getUser);
 

@@ -3,27 +3,6 @@ const usignup = async (req, res) => {
   try {
     const { name, email, password, age, role } = req.body;
 
-    if (!name || !email || !password || !age) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    const isEmailTaken = await UserModel.findOne({ email });
-
-    if (isEmailTaken) {
-      return res.status(400).json({ message: "Email already exist" });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: "Invalid entry" });
-    }
-
-    if (password.length < 8) {
-      return res
-        .status(400)
-        .json({ message: "Password must be atleast 8 characters long" });
-    }
-
     let newUser;
 
     if (role) {
@@ -57,22 +36,6 @@ const usignin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Please enter email and password" });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: "Invalid entry" });
-    }
-
-    if (password.length < 8) {
-      return res
-        .status(400)
-        .json({ message: "Password must be atleast 8 characters long" });
-    }
     const userFound = await UserModel.findOne({ email });
 
     if (!userFound) {
