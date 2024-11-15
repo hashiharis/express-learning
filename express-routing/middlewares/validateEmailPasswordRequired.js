@@ -4,6 +4,7 @@ const validateEmailPasswordRequired = (req, res, next) => {
   if (!email || !password) {
     res.status(400).json({ message: "Please enter email and password" });
   }
+  next();
 };
 
 module.exports = { validateEmailPasswordRequired };

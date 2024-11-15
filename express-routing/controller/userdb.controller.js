@@ -3,6 +3,8 @@ const usignup = async (req, res) => {
   try {
     const { name, email, password, age, role } = req.body;
 
+    const { image } = req.file;
+
     let newUser;
 
     if (role) {
@@ -13,6 +15,7 @@ const usignup = async (req, res) => {
         email,
         password,
         age,
+        image: req.file.filename,
       });
     } else {
       newUser = new UserModel({
@@ -20,6 +23,7 @@ const usignup = async (req, res) => {
         email,
         password,
         age,
+        image: req.file.filename,
       });
     }
 
@@ -32,6 +36,19 @@ const usignup = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+// const getImage = async (req, res) => {
+//   try {
+//     const imgFound = await UserModel.find({ image: req.file.filename });
+//     if (!imgFound) {
+//       return res.status(400).json({ message: "Image not found" });
+//     }
+//     return res.status(200).json({ message: "Image found", data: image });
+//   } catch (error) {
+//     console.log("img fetch error", error);
+//     return res.status(500).json({ message: "Server error" });
+//   }
+// };
 const usignin = async (req, res) => {
   try {
     const { email, password } = req.body;

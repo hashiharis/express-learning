@@ -15,6 +15,9 @@ const { countAPI } = require("./middlewares/apiCallCount");
 // from frontend comes in the request
 app.use(express.json());
 app.use(cors());
+app.use(express.static(`${__dirname}/upload`));
+
+console.log(__dirname);
 
 const PORT = process.env.PORT || 3000;
 

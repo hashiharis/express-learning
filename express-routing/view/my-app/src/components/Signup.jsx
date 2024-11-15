@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../apis/baseurl";
 export const Signup = () => {
   const [userDetails, setUserDetails] = useState({
     name: "",
@@ -9,6 +10,8 @@ export const Signup = () => {
     email: "",
     password: "",
   });
+  const [imgFile, setImgFile] = useState(null);
+  const [imgLink, setImgLink] = useState("");
 
   const navigate = useNavigate();
 
@@ -17,12 +20,19 @@ export const Signup = () => {
       ...userDetails,
       [e.target.name]: e.target.value,
     });
+    const file = e.target.files[0];
+
+    setImgFile(file);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     validationCheck();
-    sendDataToServer();
+    if (!imgFile) {
+      alert("Please upload an image");
+      return;
+    }
+    sendDataToServer(formData);
   };
 
   function validationCheck() {
@@ -36,15 +46,31 @@ export const Signup = () => {
     }
   }
 
-  const sendDataToServer = async () => {
+  const { name, age, email, password } = userDetails;
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("age", age);
+  formData.append("email", email);
+  formData.append("password", password);
+  formData.append("image", imgFile);
+
+  const sendDataToServer = async (formData) => {
     try {
       const res = await axios.post(
         "http://localhost:3000/user/signup",
-        userDetails
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+        // userDetails
       );
       if (res.status === 201) {
+        console.log(res);
+        setImgLink(res?.data?.data?.image);
         toast.success("Sign up is successful");
-        navigate("/signin");
+        // navigate("/signin");
       }
     } catch (error) {
       toast.error("Something went wrong");
@@ -89,6 +115,9 @@ export const Signup = () => {
         />
         <br />
         <br />
+        <input type="file" onChange={handleChanges} />
+        <img src={`${BASE_URL}/${imgLink}`} alt="img" />
+        {/* {`${BASE_URL}${imgLink}`} */}
         <input type="submit" value="Signup" />
         <br />
         <br />

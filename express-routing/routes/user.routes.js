@@ -21,6 +21,7 @@ const { validatePassword } = require("../middlewares/validatePassword");
 const {
   validateEmailPasswordRequired,
 } = require("../middlewares/validateEmailPasswordRequired");
+const { upload } = require("../middlewares/imgUpload");
 const userRouter = express.Router();
 
 // userRouter.get('/new',(req,res)=>{
@@ -29,6 +30,7 @@ const userRouter = express.Router();
 
 userRouter.post(
   "/signup",
+  upload.single("image"),
   validateRequiredFields,
   validateEmail,
   validatePassword,
@@ -38,7 +40,6 @@ userRouter.post(
 userRouter.post(
   "/signin",
   validateEmailPasswordRequired,
-  validateEmail,
   validatePassword,
   usignin
 );
